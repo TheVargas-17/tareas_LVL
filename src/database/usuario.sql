@@ -45,7 +45,7 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id_usuario`, `nombre`, `apellido`, `email`, `password`, `telefono`, `fecha_registro`, `ultimo_acceso`, `activo`, `foto_perfil`) VALUES
-(1, 'Naho ', 'Jimenez', 'neyda02@gmail.com', 'ney24', '6562348338', '2026-03-19 17:18:03', NULL, 1, NULL);
+(1, 'leo ', 'vargas', 'leonardovargas.lop1@gmail.com', '2007LvL', '6561098677', '2026-04-23 10:45:50', NULL, 1, NULL);
 
 --
 -- Índices para tablas volcadas

@@ -15,3 +15,10 @@ class AuthController:
         except ValidationError as e:
             # Retorna el primer error de validación encontrado
             return False, e.errors()[0]['msg']
+    def login(self, email, password):
+            user = self.model.validar_login(email, password)
+
+            if user:
+                return user, "Login correcto"
+            else:
+                return None, "Correo o contraseña incorrectos"

@@ -121,6 +121,14 @@ wheels = [
 ]
 
 [[package]]
+name = "felt"
+version = "0.2"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/10/2d/952ecc06eed99b8e8e86e49c01103b98c557b0b52f7d5cf42e73d87966b2/felt-0.2-py3-none-any.whl", hash = "sha256:9d1585ff0e416d9eab8a03c54c245c2c19f408a3c43a01d0462f908e99fa19f0", size = 9505, upload-time = "2019-05-02T12:20:41.354Z" },
+]
+
+[[package]]
 name = "flet"
 version = "0.84.0"
 source = { registry = "https://pypi.org/simple" }
@@ -352,6 +360,7 @@ source = { editable = "." }
 dependencies = [
     { name = "bcrypt" },
     { name = "email-validator" },
+    { name = "felt" },
     { name = "flet" },
     { name = "mysql-connector-python" },
     { name = "pydantic" },
@@ -362,6 +371,7 @@ dependencies = [
 requires-dist = [
     { name = "bcrypt", specifier = ">=5.0.0" },
     { name = "email-validator", specifier = ">=2.3.0" },
+    { name = "felt", specifier = ">=0.2" },
     { name = "flet", specifier = ">=0.82.2" },
     { name = "mysql-connector-python", specifier = ">=9.6.0" },
     { name = "pydantic", specifier = ">=2.12.5" },

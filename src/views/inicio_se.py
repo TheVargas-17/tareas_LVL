@@ -13,6 +13,7 @@ def main(page: ft.Page):
         if usuario.value == "admin" and password.value == "1234":
             mensaje.value = "Inicio de sesión correcto"
             mensaje.color = "green"
+            
         else:
             mensaje.value = "Usuario o contraseña incorrectos"
             mensaje.color = "red"
@@ -23,7 +24,7 @@ def main(page: ft.Page):
     page.add(
         ft.Column(
             [
-                ft.Text("Login", size=30),
+                ft.Text("inicio de sesion", size=30),
                 usuario,
                 password,
                 boton_login,
