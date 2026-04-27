@@ -12,7 +12,7 @@ def main(page: ft.Page):
     def login(e):
         if usuario.value == "admin" and password.value == "1234":
             mensaje.value = "Inicio de sesión correcto"
-            mensaje.color = "green"
+            mensaje.color = "blue"
             
         else:
             mensaje.value = "Usuario o contraseña incorrectos"
@@ -22,9 +22,13 @@ def main(page: ft.Page):
     boton_login = ft.ElevatedButton("Iniciar sesión", on_click=login)
 
     page.add(
-        ft.Column(
+    ft.Container(
+        border=ft.border.all(3, "blue"),  # grosor y color del borde
+        border_radius=10,
+        padding=20,  # opcional, para que el contenido no quede pegado al borde
+        content=ft.Column(
             [
-                ft.Text("inicio de sesion", size=30),
+                ft.Text("LOGIN", size=40, color="blue"),
                 usuario,
                 password,
                 boton_login,
@@ -34,5 +38,5 @@ def main(page: ft.Page):
             horizontal_alignment=ft.CrossAxisAlignment.CENTER
         )
     )
-
+)
 ft.app(target=main)
