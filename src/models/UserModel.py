@@ -4,6 +4,10 @@ from .databaseModel import Database
 class UsuarioModel:
     def __init__(self):
         self.db = Database()
+        
+        
+    def registrar(self,):
+        pass
 
     def validar_login(self, email, password):
         conn = self.db.get_connection()
