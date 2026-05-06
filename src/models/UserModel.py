@@ -3,6 +3,10 @@ from models.databaseModel import Database
 class UsuarioModel:
     def __init__(self):
         self.db = Database()
+        
+        
+    def registrar(self,):
+        pass
 
     # ✅ REGISTRAR USUARIO
     def registrar(self, usuario_data):
