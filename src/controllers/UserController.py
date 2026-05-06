@@ -8,17 +8,31 @@ class AuthController:
 
     def registrar_usuario(self, nombre, email, password):
         try:
-            # Validar datos con el Schema
-            nuevo_usuario = UsuarioSchema(nombre=nombre, email=email, password=password)
-            success = self.model.registrar(nuevo_usuario)
-            return success, "Usuario creado correctamente"
-        except ValidationError as e:
-            # Retorna el primer error de validación encontrado
-            return False, e.errors()[0]['msg']
-    def login(self, email, password):
-            user = self.model.validar_login(email, password)
+            # Validar datos
+            nuevo_usuario = UsuarioSchema(
+                nombre=nombre,
+                email=email,
+                password=password
+            )
 
-            if user:
-                return user, "Login correcto"
+          
+            if self.model.buscar_por_email(email):
+                return False, "El usuario ya existe"
+
+            success = self.model.registrar(nuevo_usuario)
+
+            if success:
+                return True, "Usuario creado correctamente"
             else:
-                return None, "Correo o contraseña incorrectos"
+                return False, "Error al registrar usuario"
+
+        except ValidationError as e:
+            return False, e.errors()[0]['msg']
+
+    def login(self, email, password):
+        user = self.model.validar_login(email, password)
+
+        if user:
+            return user, "Login correcto "
+        else:
+            return None, "Correo o contraseña incorrectos "

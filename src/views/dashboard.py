@@ -1,74 +1,41 @@
 import flet as ft
 
-def DashboardView(page, tarea_controller):
+def DashboardView(page):
+
+    # PROTEGER RUTA (si no hay sesión)
     user = page.session.get("user")
-    lista_tareas = ft.Column(scroll=ft.ScrollMode.ALWAYS, expand=True)
 
-    def refresh():
-        lista_tareas.controls.clear()
-        for t in tarea_controller.obtener_lista(user["id_usuario"]):
-            lista_tareas.controls.append(
-                ft.Card(
-                    content=ft.Container(
-                        content=ft.ListTile(
-                            title=ft.Text(t["titulo"], weight="bold"),
-                            subtitle=ft.Text(f"{t['descripcion']}\nPrioridad: {t['prioridad']}"),
-                            trailing=ft.Badge(
-                                content=ft.Text(t["estado"]),
-                                bgcolor=ft.Colors.ORANGE_300
-                            )
-                        ),
-                        padding=10
-                    )
-                )
-            )
+    if not user:
+        page.go("/")
+        return ft.View("/", [])  # evita errores
+
+    #  FUNCIÓN LOGOUT
+    def logout(e):
+        page.session.clear()
+        page.go("/")
         page.update()
-
-    # Formulario rápido
-    txt_titulo = ft.TextField(label="Nueva Tarea", expand=True)
-
-    def add_task(e):
-        success, msg = tarea_controller.guardar_nueva(
-            user["id_usuario"],
-            txt_titulo.value,
-            "",
-            "media",
-            "trabajo"
-        )
-        if success:
-            txt_titulo.value = ""
-            refresh()
 
     return ft.View(
         "/dashboard",
         [
             ft.AppBar(
-                title=ft.Text(f"Bienvenido, {user['nombre']}"),
+                title=ft.Text(f"Bienvenido {user['nombre']}"),
                 actions=[
                     ft.IconButton(
-                        ft.Icons.EXIT_TO_APP,
-                        on_click=lambda _: page.go("/")
+                        icon=ft.icons.LOGOUT,
+                        tooltip="Cerrar sesión",
+                        on_click=logout
                     )
                 ]
             ),
+
             ft.Column(
                 [
-                    ft.Row(
-                        [
-                            txt_titulo,
-                            ft.FloatingActionButton(
-                                icon=ft.Icons.ADD,
-                                on_click=add_task
-                            )
-                        ]
-                    ),
-                    ft.Divider(),
-                    ft.Text("Mis Tareas Pendientes", size=20, weight="bold"),
-                    lista_tareas
+                    ft.Text("Estás dentro del sistema 🎉", size=20),
+                    ft.Text(f"Correo: {user['email']}"),
                 ],
-                expand=True,
-                spacing=20
+                alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER
             )
-        ],
-        on_open=lambda _: refresh()
+        ]
     )

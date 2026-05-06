@@ -1,34 +1,38 @@
+import sys
+import os
+
+sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
+
 import flet as ft
 from controllers.UserController import AuthController
-from controllers.TareasController import TareaController
 from views.LoginView import LoginView
+from views.RegisterView import RegisterView
 from views.dashboard import DashboardView
+
 
 def start(page: ft.Page):
     auth_ctrl = AuthController()
-    task_ctrl = TareaController()
 
-    def route_change(e):
-        page.views.clear()
+    page.title = "Sistema"
+    page.window_width = 400
+    page.window_height = 700
 
-        if page.route == "/":
-            page.views.append(LoginView(page, auth_ctrl))
+    # 🔥 FUNCIONES DE NAVEGACIÓN
 
-        elif page.route == "/dashboard":
-            page.views.append(DashboardView(page, task_ctrl))
+    def ir_login():
+        page.clean()
+        page.add(LoginView(page, auth_ctrl, ir_dashboard, ir_registro))
 
-        else:
-            page.views.append(
-                ft.View("/", [ft.Text("Ruta no encontrada")])
-            )
+    def ir_registro():
+        page.clean()
+        page.add(RegisterView(page, auth_ctrl, ir_login))
 
-        page.update()
+    def ir_dashboard():
+        page.clean()
+        page.add(DashboardView(page, ir_login))
 
-    page.on_route_change = route_change
-    page.go("/")
+    # 👇 INICIO
+    ir_login()
 
-def main():
-    ft.app(target=start)
 
-if __name__ == "__main__":
-    main()
+ft.app(target=start)
