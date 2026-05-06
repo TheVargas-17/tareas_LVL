@@ -3,27 +3,63 @@ from datetime import datetime
 
 def RegistroView(page: ft.Page, auth_controller):
     
-    def ver_contra():
+    def ver_contra(e):
         contraseña.password = not contraseña.password
         contraseña.update()
         
-    correo=(ft.TextField(label="Correo",autofocus=True, icon=ft.Icons.PERSON ))
-    contraseña=(ft.TextField(label="Contraseña",suffix=ft.IconButton(icon=ft.Icons.VISIBILITY, on_click=ver_contra) ,password=True, autofocus=True, icon=ft.Icons.PASSWORD))
-    nombre=(ft.TextField(label="Nombre",icon=ft.Icons.BADGE))
-    apellido=(ft.TextField(label="apellido",autofocus=True,))
-    telefono=(ft.TextField(label="Telefono",autofocus=True,icon=ft.Icons.CALL))
+    nombre = ft.TextField(
+        label="Nombre",
+        width=135,
+        prefix_icon=ft.Icons.BADGE
+    )
+
+    apellido = ft.TextField(
+        label="Apellido",
+        width=135
+    )
+
+    telefono = ft.TextField(
+        label="Teléfono",
+        width=280,
+        prefix_icon=ft.Icons.CALL
+    )
+
+    correo = ft.TextField(
+        label="Correo",
+        width=280,
+        prefix_icon=ft.Icons.PERSON
+    )
+
+    contraseña = ft.TextField(
+        label="Contraseña",
+        width=280,
+        password=True,
+        can_reveal_password=True,
+        prefix_icon=ft.Icons.LOCK
+    )
+
     file_picker = ft.FilePicker()
-    boton = ft.Button("Seleccionar Archivo", on_click=lambda _: file_picker.pick_files(allow_multiple=True, allowed_extensions=[".jpg", ".jpeg", ".png"]))
+
+    boton = ft.ElevatedButton(
+        "Seleccionar imagen",
+        width=280,
+        on_click=lambda _: file_picker.pick_files(
+            allow_multiple=True,
+            allowed_extensions=[".jpg", ".jpeg", ".png"]
+        )
+    )
     
     def registra(e):
-        if not correo.value and not contraseña.value and not nombre.value and not apellido.value and not telefono.value :
+        if not correo.value and not contraseña.value and not nombre.value and not apellido.value and not telefono.value:
             page.show_dialog(ft.SnackBar(ft.Text("Por favor, complete todos los campos")))
             return
         
         hoy = datetime.now()
         fecha = hoy.strftime("%Y-%m-%d")
         
-        user, msg = auth_controller.registrar_Usuario(nombre.value, apellido.value, correo.value, contraseña.value, telefono.value, fecha)
+        user, msg = auth_controller.registrar_Usuario(
+            nombre.value, apellido.value, correo.value, contraseña.value, telefono.value, fecha
+        )
         
         if user:
             page.go("/")
@@ -31,38 +67,57 @@ def RegistroView(page: ft.Page, auth_controller):
         else:
             page.show_dialog(ft.SnackBar(ft.Text(msg)))
     
-    registrar =( ft.ElevatedButton("Registrase",color=ft.Colors.BLUE, on_click=registra))
-    def regresar():
+    registrar = ft.ElevatedButton(
+        "Registrarse",
+        width=280,
+        on_click=registra
+    )
+
+    def regresar(e):
         page.go("/")
         
-    reversa = ( ft.ElevatedButton("Regresar a login",color=ft.Colors.RED ,on_click=regresar))
+    reversa = ft.TextButton(
+        "Volver al login",
+        on_click=regresar
+    )
+    
+    contenido = ft.Container(
+        content=ft.Column(
+            [
+                ft.Text("Crear cuenta", size=22, weight="bold"),
+                
+                ft.Row(
+                    [nombre, apellido],
+                    alignment=ft.MainAxisAlignment.CENTER
+                ),
+                
+                telefono,
+                correo,
+                contraseña,
+                boton,
+                registrar,
+                reversa
+            ],
+            spacing=15,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+        ),
+        padding=25,
+        border_radius=12,
+        bgcolor=ft.Colors.WHITE,
+        width=320
+    )
     
     return ft.View(
         route="/registro",
-        vertical_alignment=ft.MainAxisAlignment.CENTER, 
-        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         appbar=ft.AppBar(
             title=ft.Text("Registro"),
             bgcolor=ft.Colors.BLUE_GREY_900,
-            color="white"
+            color="white",
+            center_title=True
         ),
+        vertical_alignment=ft.MainAxisAlignment.CENTER,
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
-            ft.Column(
-                [
-                    ft.Icon(ft.Icons.ACCOUNT_BOX, size=50, color=ft.Colors.BLUE),
-                    ft.Text("Registro de usuario", size=30, weight="bold"),
-                    ft.Row([nombre,apellido,],ft.CrossAxisAlignment.CENTER,),
-                    telefono,
-                    correo,
-                    contraseña,
-                    boton,
-                    registrar,
-                    reversa
-                ],
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                spacing=20,
-                tight=True 
-            )
+            contenido
         ]
     )
-    
