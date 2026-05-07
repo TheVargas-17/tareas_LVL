@@ -4,7 +4,7 @@ from controllers.TareaController import TareaController
 from views.LoginView import LoginView
 from views.dashboardView import DashboardView
 from views.RegistroView import RegistroView
-from views.UserView import UserView, ModificarView
+from views.UserView import UserView
 
 def start(page: ft.Page):
     page.title = "LOGIN"
@@ -29,10 +29,7 @@ def start(page: ft.Page):
             
         elif page.route == "/perfil":
             page.views.append(UserView(page, auth_ctrl))
-            
-        elif page.route == "/modificar":
-            user = getattr(page, "user_data", None)
-            page.views.append(ModificarView(page, user))
+     
             
         page.update()
 

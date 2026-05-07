@@ -10,18 +10,20 @@ def LoginView(page: ft.Page, auth_controller):
         contra.update()
         
     correo = ft.TextField(
-        label="Correo",
-        width=280,
-        prefix_icon=ft.Icons.PERSON
-    )
+    label="Correo",
+    width=280,
+    prefix_icon=ft.Icons.PERSON,
+    color=ft.Colors.BLACK
+)
 
     contra = ft.TextField(
-        label="Contraseña",
-        width=280,
-        password=True,
-        can_reveal_password=True,
-        prefix_icon=ft.Icons.LOCK
-    )
+    label="Contraseña",
+    width=280,
+    password=True,
+    can_reveal_password=True,
+    prefix_icon=ft.Icons.LOCK,
+    color=ft.Colors.BLACK
+)
     
     def login_click(e):
         if not correo.value or not contra.value:
@@ -54,7 +56,8 @@ def LoginView(page: ft.Page, auth_controller):
     contenido = ft.Container(
         content=ft.Column(
             [
-                ft.Text("Acceso", size=22, weight="bold"),
+                ft.Text("Acceso", size=22, weight="bold"   , color=ft.Colors.BLACK
+),
                 correo,
                 contra,
                 iniciar,
