@@ -41,51 +41,78 @@ def UserView(page, auth_controller):
         ]
     )
 
+
 def ModificarView(page, user):
-    
+
+    #  GUARDAR 
     def guardar_cambios(e):
-        if not telefono_nuevo.value or not apellido_nuevo.value or not nombre_nuevo.value:
-            page.show_dialog(ft.SnackBar(ft.Text("Complete los campos")))
-            return False
+
+        if not nombre_nuevo.value or not apellido_nuevo.value or not telefono_nuevo.value:
+            page.snack_bar = ft.SnackBar(ft.Text("Complete los campos"))
+            page.snack_bar.open = True
+            page.update()
+            return
+
+        success = AuthController().modificar(
+            user["id_usuario"],
+            nombre_nuevo.value,
+            apellido_nuevo.value,
+            telefono_nuevo.value,
+        )
+
+        if success:
+            user["nombre"] = nombre_nuevo.value
+            user["apellido"] = apellido_nuevo.value
+            user["telefono"] = telefono_nuevo.value
+
+            page.user_data = user
+
+            page.snack_bar = ft.SnackBar(ft.Text("Perfil actualizado"))
+            page.snack_bar.open = True
+            page.update()
+
+            page.go("/perfil")
+
         else:
-            success= AuthController().modificar(
-                user['id_usuario'],
-                nombre_nuevo.value,
-                apellido_nuevo.value,
-                telefono_nuevo.value,
-                
-            )
-            if success:
-                page.show_dialog(ft.SnackBar(ft.Text("Perfil actualizado correctamente")))
-                user['nombre'] = nombre_nuevo.value
-                user['apellido'] = apellido_nuevo.value
-                user['telefono'] = telefono_nuevo.value
-    
-                page.user_data = user
-                page.go("/perfil")
-                page.update()
-            else:
-                page.show_dialog(ft.SnackBar(ft.Text("Error al actualizar perfil")))
-    
-    nombre_nuevo = ft.TextField(label="Nuevo Nombre", icon=ft.Icons.BADGE)
-    apellido_nuevo = ft.TextField(label="Nuevo Apellido", icon=ft.Icons.BADGE)
-    telefono_nuevo = ft.TextField(label="Nuevo Telefono", icon=ft.Icons.CALL)
-    guardar_btn = ft.ElevatedButton("Guardar Cambios", on_click=guardar_cambios)
-    salir = ft.ElevatedButton("Salir", on_click=lambda _: page.go("/perfil"))
-    
+            page.snack_bar = ft.SnackBar(ft.Text("Error al actualizar"))
+            page.snack_bar.open = True
+            page.update()
+
+    #  CAMPOS 
+    nombre_nuevo = ft.TextField(label="Nombre")
+    apellido_nuevo = ft.TextField(label="Apellido")
+    telefono_nuevo = ft.TextField(label="Teléfono")
+
+    #  BOTONES 
+    guardar_btn = ft.ElevatedButton("Guardar cambios", on_click=guardar_cambios)
+    salir_btn = ft.TextButton("Cancelar", on_click=lambda _: page.go("/perfil"))
+
+    #  VIEW 
     return ft.View(
         route="/modificar",
         controls=[
-            ft.Column(
-                [
-                    ft.Icon(ft.Icons.ACCOUNT_BOX, size=50, color=ft.Colors.BLUE),
-                    ft.Text("Registro de usuario", size=30, weight="bold"),
-                    ft.Row([nombre_nuevo,apellido_nuevo,],ft.CrossAxisAlignment.CENTER,),
-                    telefono_nuevo,
-                    ft.Row([guardar_btn,salir],ft.CrossAxisAlignment.CENTER,),
-                ],
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                spacing=20,
-                tight=True 
+
+            ft.Container(
+                padding=20,
+                content=ft.Column(
+                    [
+
+                        ft.Icon(ft.Icons.PERSON, size=60, color=ft.Colors.BLUE),
+
+                        ft.Text("Editar perfil", size=22, weight="bold"),
+
+                        nombre_nuevo,
+                        apellido_nuevo,
+                        telefono_nuevo,
+
+                        ft.Row(
+                            [guardar_btn, salir_btn],
+                            alignment=ft.MainAxisAlignment.CENTER
+                        )
+                    ],
+                    spacing=15,
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER
+                )
             )
-        ])
+        ]
+    )

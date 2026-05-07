@@ -7,7 +7,7 @@ from views.RegistroView import RegistroView
 from views.UserView import UserView, ModificarView
 
 def start(page: ft.Page):
-    page.title = "Sistema SIGE"
+    page.title = "LOGIN"
     page.window_width = 450
     page.window_height = 700
     

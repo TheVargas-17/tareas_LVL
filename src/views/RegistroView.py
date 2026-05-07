@@ -4,8 +4,8 @@ from datetime import datetime
 def RegistroView(page: ft.Page, auth_controller):
     
     def ver_contra(e):
-        contraseña.password = not contraseña.password
-        contraseña.update()
+        contrasena.password = not contrasena.password
+        page.update()
         
     nombre = ft.TextField(
         label="Nombre",
@@ -30,7 +30,7 @@ def RegistroView(page: ft.Page, auth_controller):
         prefix_icon=ft.Icons.PERSON
     )
 
-    contraseña = ft.TextField(
+    contrasena = ft.TextField(
         label="Contraseña",
         width=280,
         password=True,
@@ -38,35 +38,31 @@ def RegistroView(page: ft.Page, auth_controller):
         prefix_icon=ft.Icons.LOCK
     )
 
-    file_picker = ft.FilePicker()
-
-    boton = ft.ElevatedButton(
-        "Seleccionar imagen",
-        width=280,
-        on_click=lambda _: file_picker.pick_files(
-            allow_multiple=True,
-            allowed_extensions=[".jpg", ".jpeg", ".png"]
-        )
-    )
-    
     def registra(e):
-        if not correo.value and not contraseña.value and not nombre.value and not apellido.value and not telefono.value:
-            page.show_dialog(ft.SnackBar(ft.Text("Por favor, complete todos los campos")))
+        if not nombre.value or not apellido.value or not correo.value or not contrasena.value or not telefono.value:
+            page.snack_bar = ft.SnackBar(ft.Text("Por favor, complete todos los campos"))
+            page.snack_bar.open = True
+            page.update()
             return
         
-        hoy = datetime.now()
-        fecha = hoy.strftime("%Y-%m-%d")
-        
+        fecha = datetime.now().strftime("%Y-%m-%d")
+
         user, msg = auth_controller.registrar_Usuario(
-            nombre.value, apellido.value, correo.value, contraseña.value, telefono.value, fecha
+            nombre.value,
+            apellido.value,
+            correo.value,
+            contrasena.value,
+            telefono.value,
+            fecha
         )
-        
+
+        page.snack_bar = ft.SnackBar(ft.Text(msg))
+        page.snack_bar.open = True
+        page.update()
+
         if user:
             page.go("/")
-            page.show_dialog(ft.SnackBar(ft.Text(msg)))
-        else:
-            page.show_dialog(ft.SnackBar(ft.Text(msg)))
-    
+
     registrar = ft.ElevatedButton(
         "Registrarse",
         width=280,
@@ -75,12 +71,12 @@ def RegistroView(page: ft.Page, auth_controller):
 
     def regresar(e):
         page.go("/")
-        
+
     reversa = ft.TextButton(
         "Volver al login",
         on_click=regresar
     )
-    
+
     contenido = ft.Container(
         content=ft.Column(
             [
@@ -93,8 +89,7 @@ def RegistroView(page: ft.Page, auth_controller):
                 
                 telefono,
                 correo,
-                contraseña,
-                boton,
+                contrasena,
                 registrar,
                 reversa
             ],
@@ -106,7 +101,7 @@ def RegistroView(page: ft.Page, auth_controller):
         bgcolor=ft.Colors.WHITE,
         width=320
     )
-    
+
     return ft.View(
         route="/registro",
         appbar=ft.AppBar(
@@ -117,7 +112,5 @@ def RegistroView(page: ft.Page, auth_controller):
         ),
         vertical_alignment=ft.MainAxisAlignment.CENTER,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-        controls=[
-            contenido
-        ]
+        controls=[contenido]
     )

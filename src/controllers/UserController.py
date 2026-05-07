@@ -5,7 +5,7 @@ from pydantic import ValidationError
 class AuthController:
     def __init__(self):
         self.model = UsuarioModel()
-        
+
     def registrar_Usuario(self, nombre, apellido, email, contraseña, telefono, fecha):
         try:
             nuevo_usuario = UsuarioShema(
@@ -18,32 +18,36 @@ class AuthController:
             )
 
             success = self.model.registrar(nuevo_usuario)
+
             if success:
-                return True, "Usuario creador correctamente, inicia sesion"
+                return True, "Usuario creado correctamente"
             else:
-                return False, "Usuario Existente"
+                return False, "El usuario ya existe o hubo un error"
 
         except ValidationError as e:
             return False, e.errors()[0]['msg']
-    
+
+        except Exception as e:
+            print("ERROR REGISTRO:", e)
+            return False, "Error interno al registrar"
+
     def modificar(self, id_usuario, nombre, apellido, telefono):
         try:
-            success = self.model.modificar_perfil(id_usuario, nombre, apellido, telefono)
-            return success
+            return self.model.modificar_perfil(id_usuario, nombre, apellido, telefono)
+
         except Exception as e:
-            print(f"Error al modificar perfil: {e}")
+            print("ERROR MODIFICAR:", e)
             return False
-    
+
     def login(self, email, password):
         try:
-            print("ENTRÉ AL LOGIN CONTROLLER")
-    
             user = self.model.validar_login(email, password)
-    
+
             if user:
                 return user, "Login correcto"
             else:
-                return False, "Credenciales incorrectas"
-    
-        except ValidationError as e:
-            return False, e.errors()[0]['msg']
+                return None, "Credenciales incorrectas"
+
+        except Exception as e:
+            print("ERROR LOGIN:", e)
+            return None, "Error en login"

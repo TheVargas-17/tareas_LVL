@@ -10,6 +10,8 @@
 CREATE DATABASE IF NOT EXISTS `registro` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci */;
 USE `registro`;
 
+/* ===================== TAREAS ===================== */
+
 CREATE TABLE IF NOT EXISTS `tareas` (
   `id_tarea` int(11) NOT NULL AUTO_INCREMENT,
   `id_usuario` int(11) DEFAULT NULL,
@@ -24,30 +26,31 @@ CREATE TABLE IF NOT EXISTS `tareas` (
   PRIMARY KEY (`id_tarea`),
   KEY `fk_usuario_tarea` (`id_usuario`),
   CONSTRAINT `fk_usuario_tarea` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-DELETE FROM `tareas`;
-INSERT INTO `tareas` (`id_tarea`, `id_usuario`, `titulo`, `descripcion`, `fecha_creacion`, `fecha_limite`, `hora_limite`, `prioridad`, `clasificacion`, `estado`) VALUES
-	(1, 1, 'hola', '', NULL, '0000-00-00', '00:00:00', 'media', 'trabajo', NULL);
+/* ===================== USUARIO ===================== */
 
 CREATE TABLE IF NOT EXISTS `usuario` (
   `id_usuario` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(100) DEFAULT NULL,
   `apellido` varchar(100) DEFAULT NULL,
   `email` varchar(150) DEFAULT NULL,
-  `contraseña` varchar(300) DEFAULT NULL,
+  `contrasena` varchar(255) DEFAULT NULL,
   `telefono` varchar(20) DEFAULT NULL,
   `fecha_registro` timestamp NULL DEFAULT NULL,
   `ultimo_ingreso` timestamp NULL DEFAULT NULL,
   `activo` varchar(10) DEFAULT NULL,
-  `foto` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_usuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+/* ===================== USUARIO ADMIN ===================== */
 
 DELETE FROM `usuario`;
-INSERT INTO `usuario` (`id_usuario`, `nombre`, `apellido`, `email`, `contraseña`, `telefono`, `fecha_registro`, `ultimo_ingreso`, `activo`, `foto`) VALUES
-	(1, 'Admin', 'Admins', 'Admin@gmail.com', 'Admin#19', '6562321212', '2026-03-19 11:24:00', '2026-03-19 11:24:02', 'inactivo', NULL);
 
+INSERT INTO `usuario`
+(`id_usuario`, `nombre`, `apellido`, `email`, `contrasena`, `telefono`, `fecha_registro`, `ultimo_ingreso`, `activo`)
+VALUES
+(1, 'Admin', 'Admins', 'Admin@gmail.com', 'Admin#19', '6562321212', '2026-03-19 11:24:00', '2026-03-19 11:24:02', 'inactivo');
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
